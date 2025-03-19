@@ -1,14 +1,4 @@
-//your code here
 document.addEventListener('DOMContentLoaded', function() {
-    // Image sources (you can replace these with your own images)
-    const imageSources = [
-        'https://picsum.photos/id/237/300/300',  // Dog
-        'https://picsum.photos/id/1084/300/300', // Walrus
-        'https://picsum.photos/id/1074/300/300', // Bird
-        'https://picsum.photos/id/1069/300/300', // Architecture
-        'https://picsum.photos/id/1025/300/300'  // Panda
-    ];
-    
     // Elements
     const imagesContainer = document.getElementById('imagesContainer');
     const resetButton = document.getElementById('reset');
@@ -35,32 +25,31 @@ document.addEventListener('DOMContentLoaded', function() {
         resultParagraph.textContent = '';
         resultParagraph.className = '';
         
+        // Define the image classes we'll use
+        const imageClasses = ['img1', 'img2', 'img3', 'img4', 'img5'];
+        
         // Choose a random image to duplicate
-        duplicateImageIndex = Math.floor(Math.random() * imageSources.length);
+        duplicateImageIndex = Math.floor(Math.random() * imageClasses.length);
         
         // Create array with 6 images (5 unique + 1 duplicate)
-        let gameImages = [...imageSources];
-        gameImages.push(imageSources[duplicateImageIndex]);
+        let gameImages = [...imageClasses];
+        gameImages.push(imageClasses[duplicateImageIndex]);
         
         // Shuffle the images
         shuffleArray(gameImages);
         
         // Create image tiles
-        gameImages.forEach((src, index) => {
-            const tileDiv = document.createElement('div');
-            tileDiv.className = 'image-tile';
-            tileDiv.dataset.index = index;
-            
+        gameImages.forEach((imgClass, index) => {
             const img = document.createElement('img');
-            img.src = src;
+            img.className = imgClass;
             img.alt = `Image ${index + 1}`;
+            img.dataset.index = index;
             
-            tileDiv.appendChild(img);
-            imagesContainer.appendChild(tileDiv);
-            imageElements.push(tileDiv);
+            imagesContainer.appendChild(img);
+            imageElements.push(img);
             
             // Add click event
-            tileDiv.addEventListener('click', () => handleTileClick(tileDiv, index));
+            img.addEventListener('click', () => handleTileClick(img, index));
         });
     }
     
@@ -105,12 +94,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Verify button click handler
     verifyButton.addEventListener('click', function() {
-        const firstImageSrc = imageElements[selectedTiles[0]].querySelector('img').src;
-        const secondImageSrc = imageElements[selectedTiles[1]].querySelector('img').src;
+        const firstImageClass = imageElements[selectedTiles[0]].className.split(' ')[0]; // Get the base class without 'selected'
+        const secondImageClass = imageElements[selectedTiles[1]].className.split(' ')[0];
         
         verifyButton.style.display = 'none';
         
-        if (firstImageSrc === secondImageSrc) {
+        if (firstImageClass === secondImageClass) {
             resultParagraph.textContent = 'You are a human. Congratulations!';
             resultParagraph.className = 'success';
         } else {
